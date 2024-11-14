@@ -1,5 +1,5 @@
 body{
-    width: 500px;
+    width: 600px;
 }
 
 h1{
@@ -7,11 +7,17 @@ h1{
 }
 input,p{
     display: inline-block;
+    height: 16px;
 }
 
-.numbers, .colorPie{
+input{
+    width: 100px;
+}
+
+.numbers, .colorPie, .colorShower{
     display: inline-block;
 }
+
 .colorPie{
     text-align: left;
     position: relative;
@@ -20,6 +26,8 @@ input,p{
 }
 .numbers{
     text-align: right;
+    margin-left: auto; 
+    margin-right: 0;
 }
 
 .pie{
@@ -35,4 +43,45 @@ input,p{
     top: 120px;
     left: 120px;
     pointer-events:none;
+}
+
+.copyButton{
+    vertical-align: middle;
+    height: 16px;
+    vertical-align: middle;
+}
+
+.copyButtonImage{
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+}
+
+.colorShower{
+    width: 100px;
+    height: 16px;
+    border: 2px;
+    border-style: solid;
+    border-color: black;
+    vertical-align: middle;
+}
+
+.slider{
+    vertical-align: middle;
+}
+
+
+#rSlider
+{
+    background-color: linear-gradient(to right, white, red);
+}
+
+#rSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #04AA6D;
+    cursor: pointer;
 }
