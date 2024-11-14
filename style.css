@@ -1,0 +1,38 @@
+body{
+    width: 500px;
+}
+
+h1{
+    text-align: center;
+}
+input,p{
+    display: inline-block;
+}
+
+.numbers, .colorPie{
+    display: inline-block;
+}
+.colorPie{
+    text-align: left;
+    position: relative;
+    top: 0;
+    left: 0;
+}
+.numbers{
+    text-align: right;
+}
+
+.pie{
+    width: 256px;
+    height: 256px;
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+.selector{
+    position: absolute;
+    top: 120px;
+    left: 120px;
+    pointer-events:none;
+}
