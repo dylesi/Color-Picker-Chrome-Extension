@@ -74,7 +74,10 @@ function start()
     writeColorChange();
     
     chrome.storage.local.get("key").then((result) => {
-        savedColor = result.key;
+        if(result.key != undefined)
+        {
+            savedColor = result.key;
+        }
         setColorPresets();
     });
     
