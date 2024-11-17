@@ -1,63 +1,81 @@
-body{
-    width: 600px;
+body
+{
+    width: 632px;
+    background-color: #282828;
 }
 
-h1{
-    text-align: center;
-}
-input,p{
+h1, p, input
+{
     display: inline-block;
-    height: 16px;
+    color:#FFFFFF;
 }
 
-input{
+h1, p, button, img, .row, .topRow, .numbers, .colorPie{
+    -webkit-user-select: none; /* Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+}
+
+input
+{
     width: 100px;
+    background-color: #282828;
 }
 
-.numbers, .colorPie, .colorShower{
+button
+{
+    vertical-align: middle;
+    background-color: #282828;
+}
+
+.numbers, .colorPie, .colorShower, .colorDisplay, .colorPreset, .topRow
+{
     display: inline-block;
 }
 
-.colorPie{
+.colorPie
+{
     text-align: left;
     position: relative;
     top: 0;
     left: 0;
-}
-.numbers{
-    text-align: right;
-    margin-left: auto; 
-    margin-right: 0;
+    width: 300px;
+    height: 300px;
 }
 
-.pie{
+.pie
+{
     width: 256px;
     height: 256px;
     position: relative;
     top: 0;
     left: 0;
+    margin: auto;
+    margin-top: 22px;
+    background-image: radial-gradient(white 1%, rgb(255, 255, 255, 0) 74%),conic-gradient(from 90deg,#FF0000, #FF00FF, #0000FF, #00FFFF, #00FF00, #FFFF00, #FF0000);
+    background-repeat: no-repeat;
+    border-radius: 50%;
+    pointer-events:none;
 }
 
-.selector{
+.numbers
+{
+    text-align: right;
+    margin-left: auto; 
+    margin-right: 0;
+}
+
+.selector
+{
     position: absolute;
     top: 120px;
     left: 120px;
     pointer-events:none;
 }
 
-.copyButton{
-    vertical-align: middle;
-    height: 16px;
-    vertical-align: middle;
-}
-
-.copyButtonImage{
-    width: 16px;
-    height: 16px;
-    vertical-align: middle;
-}
-
-.colorShower{
+.colorDisplay
+{
     width: 100px;
     height: 16px;
     border: 2px;
@@ -66,22 +84,81 @@ input{
     vertical-align: middle;
 }
 
-.slider{
-    vertical-align: middle;
-}
-
-
-#rSlider
+.savedColors
 {
-    background-color: linear-gradient(to right, white, red);
+    width: 300px;
 }
 
-#rSlider::-webkit-slider-thumb {
+.colorPreset
+{
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    background-color: #2B2B2B;
+    border: 2px;
+    border-style: solid;
+    border-color: black;
+}
+
+.topRow
+{
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* -- Sliders -- */
+
+.slider
+{
+    vertical-align: middle;
+    border-color: black;
+    border-width: 1px;
+}
+
+#redSlider
+{
+    -webkit-appearance: none;
+    background-image: linear-gradient(to right,white,red);
+}
+
+#greenSlider
+{
+    -webkit-appearance: none;
+    background-image: linear-gradient(to right,white,green);
+}
+
+#blueSlider
+{
+    -webkit-appearance: none;
+    background-image: linear-gradient(to right,white,blue);
+}
+
+#hueSlider
+{
+    -webkit-appearance: none;
+    background-image: linear-gradient(to right,#FF0000, #FFFF00, #00FF00, #00FFFF, #0000FF, #FF00FF, #FF0000);
+}
+
+#saturationSlider
+{
+    -webkit-appearance: none;
+    background-image: linear-gradient(to right,white,red);
+}
+
+#lightnessSlider
+{
+    -webkit-appearance: none;
+    background-image: linear-gradient(to right,black,white);
+}
+
+.slider::-webkit-slider-thumb
+{
     -webkit-appearance: none;
     appearance: none;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: #04AA6D;
+    width: 4px;
+    height: 16px;
+    border: 0;
+    background-color: #000000;
     cursor: pointer;
 }
