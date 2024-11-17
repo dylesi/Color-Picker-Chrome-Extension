@@ -265,6 +265,7 @@ function fourDecimals(value)
 }
 
 async function pickColor(event) {
+    document.getElementById("body").style.display = "none";
     let eyeDropper = new EyeDropper();
     try {
       let pickedColor = await eyeDropper.open();
@@ -278,6 +279,7 @@ async function pickColor(event) {
     {
         console.log(error);
     }
+    document.getElementById("body").style.display = "inline-block";
 }
 
 function createColorPresets()
