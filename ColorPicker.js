@@ -2,6 +2,7 @@ var pressing = false;
 const names = ["red","green","blue","hex","hue","saturation","lightness"];
 var values = [255,255,255,"#FFFFFF",0,0,1];
 var savedColor = [];
+var pinned = false;
 const zeroPad = (num, places) => String(num).padStart(places, '0');
 var colorPieRadius = 128;
 
@@ -109,6 +110,8 @@ function start()
         document.getElementById("eyeDropButton").addEventListener("click", pickColor, false);
     }
     document.getElementById("saveButton").addEventListener('click', saveColor, false);
+    document.getElementById("pinButton").addEventListener('click', pin, false);
+
     displayVisuals();
     
     chrome.storage.local.get("key").then((result) => {
@@ -325,7 +328,10 @@ function colorPie(e)
 // ----- Color picker and presets ----- //
 
 async function pickColor() {
-    document.getElementById("body").style.display = "none";
+    if(!pinned)
+    {
+        document.getElementById("body").style.display = "none";
+    }
     let eyeDropper = new EyeDropper();
     let pickedColor = await eyeDropper.open();
     values[3] = pickedColor.sRGBHex.toUpperCase();
@@ -394,6 +400,16 @@ function saveColor()
 {
     newPresetValue(values[3]);
     setColorPresets();
+}
+
+function pin()
+{
+    pinned = !pinned;
+    document.getElementById("pinButton").src = "images/pin.png";
+    if(!pinned)
+    {
+        document.getElementById("pinButton").src = "images/unpin.png";
+    }
 }
 
 // ----- Utility function ----- //
