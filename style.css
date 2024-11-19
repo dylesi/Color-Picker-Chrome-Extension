@@ -107,6 +107,12 @@ button
     text-align: center;
 }
 
+.copyButtonImage
+{
+    width: 16px;
+    height: 16px;
+}
+
 /* -- Sliders -- */
 
 .slider
