@@ -8,6 +8,7 @@ h1, p, input
 {
     display: inline-block;
     color:#FFFFFF;
+    font-family: 'Times New Roman', Times, serif;
 }
 
 h1, p, button, img, .row, .topRow, .numbers, .colorPie{
@@ -15,6 +16,14 @@ h1, p, button, img, .row, .topRow, .numbers, .colorPie{
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE10+/Edge */
     user-select: none; /* Standard */
+}
+
+h1{
+    font-size: 24px;
+}
+
+p{
+    font-size: 12px;
 }
 
 input
@@ -27,6 +36,7 @@ button
 {
     vertical-align: middle;
     background-color: #282828;
+    appearance: none;
 }
 
 .numbers, .colorPie, .colorShower, .colorDisplay, .colorPreset, .topRow
@@ -115,7 +125,7 @@ button
 
 /* -- Sliders -- */
 
-.slider
+input[type=range]
 {
     vertical-align: middle;
     border-color: black;
@@ -158,9 +168,10 @@ button
     background-image: linear-gradient(to right,black,white);
 }
 
-.slider::-webkit-slider-thumb
+input[type=range]::-webkit-slider-thumb
 {
     -webkit-appearance: none;
+    -moz-appearance: none;
     appearance: none;
     width: 4px;
     height: 16px;

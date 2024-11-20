@@ -5,6 +5,8 @@ var savedColor = [];
 var pinned = false;
 const zeroPad = (num, places) => String(num).padStart(places, '0');
 var colorPieRadius = 128;
+let eyeDropper;
+
 
 function start()
 {
@@ -103,10 +105,10 @@ function start()
     if (window.EyeDropper === undefined)
     {
         console.log("Unsupported!");
-        return;
     }
     else
     {
+        eyeDropper = new EyeDropper();
         document.getElementById("eyeDropButton").addEventListener("click", pickColor, false);
     }
     document.getElementById("saveButton").addEventListener('click', saveColor, false);
@@ -327,19 +329,21 @@ function colorPie(e)
 
 // ----- Color picker and presets ----- //
 
-async function pickColor() {
+function pickColor() {
     if(!pinned)
     {
         document.getElementById("body").style.display = "none";
     }
-    let eyeDropper = new EyeDropper();
-    let pickedColor = await eyeDropper.open();
-    values[3] = pickedColor.sRGBHex.toUpperCase();
-    navigator.clipboard.writeText(values[3]);
-    hexChanged();
-    newPresetValue(values[3]);
-    setColorPresets();
-    document.getElementById("body").style.display = "inline-block";
+    setTimeout(async function() //Forces a delay, so popup has time to hide.
+    {
+        let pickedColor = await eyeDropper.open();
+        values[3] = pickedColor.sRGBHex.toUpperCase();
+        navigator.clipboard.writeText(values[3]);
+        hexChanged();
+        newPresetValue(values[3]);
+        setColorPresets();
+        document.getElementById("body").style.display = "inline-block";
+    },1);
 }
 
 function createColorPresets()
