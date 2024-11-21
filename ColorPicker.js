@@ -7,7 +7,6 @@ const zeroPad = (num, places) => String(num).padStart(places, '0');
 var colorPieRadius = 128;
 let eyeDropper;
 
-
 function start()
 {
     document.getElementById("colorPie").addEventListener("mousedown", function myFunction(e)
@@ -112,6 +111,7 @@ function start()
         eyeDropper = new EyeDropper();
         document.getElementById("eyeDropButton").addEventListener("click", pickColor, false);
     }
+
     document.getElementById("saveButton").addEventListener('click', saveColor, false);
     document.getElementById("pinButton").addEventListener('click', pin, false);
 
@@ -163,6 +163,8 @@ function hsvChanged()
     displayVisuals();
 }
 
+// ----- Calculations based on change ----- //
+
 function calculateRGB() //Based on hex
 {
     values[0] = hexadeciToDecimal(values[3].substring(1,3));
@@ -170,13 +172,13 @@ function calculateRGB() //Based on hex
     values[2] = hexadeciToDecimal(values[3].substring(5,7));
 }
 
-function calculateHex()
+function calculateHex() //Based on RPG
 {
     values[3] = ("#" + zeroPad(values[0].toString(16),2) + zeroPad(values[1].toString(16),2) + zeroPad(values[2].toString(16),2)).toUpperCase();
     saveToStorage();
 }
 
-function calculateHSV() //Calculates HSV values based on RPG
+function calculateHSV() //Based on RPG
 {
     //Converts rgb to prosent format.
     var holderValues = [values[0] / 255, values[1] / 255, values[2] / 255];
@@ -415,6 +417,11 @@ function saveColor()
     setColorPresets();
 }
 
+function saveToStorage()
+{
+    chrome.storage.local.set({ key : [values[3]].concat(savedColor)}, null);
+}
+
 function pin()
 {
     pinned = !pinned;
@@ -425,12 +432,7 @@ function pin()
     }
 }
 
-function saveToStorage()
-{
-    chrome.storage.local.set({ key : [values[3]].concat(savedColor)}, null);
-}
-
-// ----- Utility function ----- //
+// ----- Utility functions ----- //
 
 function hexadeciToDecimal(hex) {
     return parseInt(hex, 16);
