@@ -3,7 +3,6 @@ const names = ["red","green","blue","hex","hue","saturation","lightness"];
 var values = [255,255,255,"#FFFFFF",0,0,1];
 var savedColor = [];
 var pinned = false;
-var currentColor = "#FFFFFF";
 const zeroPad = (num, places) => String(num).padStart(places, '0');
 var colorPieRadius = 128;
 let eyeDropper;
@@ -65,6 +64,7 @@ function start()
         values[3] = holder;
         hexChanged();
     });
+
     for(let i = 4; i < 7; i++)
     {
         document.getElementById(names[i]).addEventListener('change', function myFunction()
@@ -116,24 +116,21 @@ function start()
     document.getElementById("pinButton").addEventListener('click', pin, false);
 
     displayVisuals();
-    
-    chrome.storage.local.get(["currentColor"]).then((result) => {
-        console.log("Result.key",result.key);
-        if(result.key != undefined)
-        {
-            values[3] = result.key;
-        }
-        hexChanged();
-    });
 
-    chrome.storage.local.get(["key"]).then((result) => {
+    chrome.storage.local.get("key").then((result) => {
         console.log("saved color key",result.key);
         if(result.key != undefined)
         {
-            savedColor = result.key;
+            console.log("Got", result.key);
+            values[3] = result.key[0];
+
+            
+            savedColor = result.key.splice(1, result.key.length);
+            setColorPresets();
+            hexChanged();
         }
-        setColorPresets();
     });
+    setColorPresets();
 }
 
 // ----- value Change ----- //
@@ -149,8 +146,7 @@ function rgbChanged()
 
 function hexChanged()
 {
-    chrome.storage.local.set({ currentColor : values[3]}, null);
-    console.log("value set!");
+    saveToStorage();
     calculateRGB();
     calculateHSV();
     displayRPG();
@@ -177,8 +173,7 @@ function calculateRGB() //Based on hex
 function calculateHex()
 {
     values[3] = ("#" + zeroPad(values[0].toString(16),2) + zeroPad(values[1].toString(16),2) + zeroPad(values[2].toString(16),2)).toUpperCase();
-    chrome.storage.local.set({ currentColor : values[3]}, null);
-    console.log("value set!");
+    saveToStorage();
 }
 
 function calculateHSV() //Calculates HSV values based on RPG
@@ -411,7 +406,7 @@ function newPresetValue(colorValue)
     {
         savedColor = savedColor.splice(0,20);
     }
-    chrome.storage.local.set({ key : savedColor}, null);
+    saveToStorage();
 }
 
 function saveColor()
@@ -428,6 +423,11 @@ function pin()
     {
         document.getElementById("pinButton").src = "images/unpin.png";
     }
+}
+
+function saveToStorage()
+{
+    chrome.storage.local.set({ key : [values[3]].concat(savedColor)}, null);
 }
 
 // ----- Utility function ----- //
