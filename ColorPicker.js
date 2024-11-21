@@ -425,10 +425,10 @@ function saveToStorage()
 function pin()
 {
     pinned = !pinned;
-    document.getElementById("pinButton").src = "images/pin.png";
+    document.getElementById("pinButtonImage").src = "images/pin.png";
     if(!pinned)
     {
-        document.getElementById("pinButton").src = "images/unpin.png";
+        document.getElementById("pinButtonImage").src = "images/unpin.png";
     }
 }
 

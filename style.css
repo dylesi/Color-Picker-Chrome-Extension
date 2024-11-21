@@ -123,6 +123,12 @@ button
     height: 16px;
 }
 
+.mediumButton
+{
+    width: 32px;
+    height: 32px;
+}
+
 /* -- Sliders -- */
 
 input[type=range]
