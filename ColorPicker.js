@@ -351,6 +351,7 @@ function pickColor() {
         values[3] = pickedColor.sRGBHex.toUpperCase();
         navigator.clipboard.writeText(values[3]);
         hexChanged();
+        displayHex();
         newPresetValue(values[3]);
         setColorPresets();
         document.getElementById("body").style.display = "inline-block";
