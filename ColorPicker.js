@@ -14,11 +14,11 @@ function start()
         pressing = true;
         colorPie(e);
     });
-    document.getElementById("colorPie").addEventListener("mousemove", function myFunction(e)
+    document.addEventListener("mousemove", function myFunction(e)
     {
         colorPie(e);
     });
-    document.getElementById("colorPie").addEventListener("mouseup", function myFunction()
+    document.addEventListener("mouseup", function myFunction()
     {
         pressing = false;
     });
@@ -316,8 +316,8 @@ function colorPie(e)
     {
         return;
     }
-    var posX = e.clientX - 30;
-    var posY = e.clientY - 94;
+    var posX = e.clientX - document.getElementById("pie").getBoundingClientRect().left;
+    var posY = e.clientY - document.getElementById("pie").getBoundingClientRect().top;
     var dist = Math.sqrt(Math.pow(posX - colorPieRadius,2) + Math.pow(posY - colorPieRadius,2));
     
     var angle = Math.atan2(posX - colorPieRadius, posY - colorPieRadius) - Math.PI / 2;
