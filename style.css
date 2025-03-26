@@ -1,5 +1,6 @@
 body
 {
+    padding:5px;
     width: 632px;
     background-color: #282828;
 }
@@ -11,7 +12,7 @@ h1, p, input
     font-family: 'Times New Roman', Times, serif;
 }
 
-h1, p, button, img, .row, .topRow, .numbers, .colorPie{
+h1, p, button, img, div, .row, .topRow, .Rightside .main{
     -webkit-user-select: none; /* Safari */        
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE10+/Edge */
@@ -20,6 +21,7 @@ h1, p, button, img, .row, .topRow, .numbers, .colorPie{
 
 h1{
     font-size: 24px;
+    margin:0px;
 }
 
 p{
@@ -39,37 +41,48 @@ button
     appearance: none;
 }
 
-.numbers, .colorPie, .colorShower, .colorDisplay, .colorPreset, .topRow
+.Rightside, .colourShower, .colourDisplay, .colourPreset, .topRow, .pie
 {
     display: inline-block;
 }
 
-.colorPie
+.main
 {
-    text-align: left;
-    position: relative;
-    top: 0;
-    left: 0;
-    width: 300px;
-    height: 300px;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.empty
+{
+    flex-shrink: 100;
+    flex-grow: 100;
 }
 
 .pie
 {
-    width: 256px;
-    height: 256px;
     position: relative;
-    top: 0;
-    left: 0;
-    margin: auto;
-    margin-top: 22px;
     background-image: radial-gradient(white 1%, rgb(255, 255, 255, 0) 74%),conic-gradient(from 90deg,#FF0000, #FF00FF, #0000FF, #00FFFF, #00FF00, #FFFF00, #FF0000);
     background-repeat: no-repeat;
     border-radius: 50%;
-    pointer-events:none;
 }
 
-.numbers
+.gap10
+{
+    gap: 10px;
+}
+
+.Leftside
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap:20px
+}
+
+.Rightside
 {
     text-align: right;
     margin-left: auto; 
@@ -82,9 +95,12 @@ button
     top: 120px;
     left: 120px;
     pointer-events:none;
+    border-radius: 50%;
+    border-style: solid;
+    border-width: 0.5px;
 }
 
-.colorDisplay
+.colourDisplay
 {
     width: 100px;
     height: 16px;
@@ -94,17 +110,19 @@ button
     vertical-align: middle;
 }
 
-.savedColors
+.savedColours
 {
-    width: 300px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 272px;
+    gap: 8px;
 }
 
-.colorPreset
+.colourPreset
 {
     width: 16px;
     height: 16px;
-    margin-right: 8px;
-    margin-bottom: 8px;
     background-color: #2B2B2B;
     border: 2px;
     border-style: solid;
@@ -113,8 +131,9 @@ button
 
 .topRow
 {
-    vertical-align: middle;
-    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
 }
 
 .smallButton

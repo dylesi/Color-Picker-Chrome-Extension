@@ -1,24 +1,28 @@
 var pressing = false;
 const names = ["red","green","blue","hex","hue","saturation","lightness"];
 var values = [255,255,255,"#FFFFFF",0,0,1];
-var savedColor = [];
+var savedColours = [];
+var savedCoulourUpperLimit = 20;
 var pinned = false;
 const zeroPad = (num, places) => String(num).padStart(places, '0');
-var colorPieRadius = 128;
 let eyeDropper;
+var pieRadius = 128;
+let selectorRadius = 4;
 
 function start()
 {
-    document.getElementById("colorPie").addEventListener("mousedown", function myFunction(e)
+    // ----- Event listeners ----- //
+    document.getElementById("pie").addEventListener("mousedown", function myFunction(e)
     {
+        console.log("Pressing!!!");
         pressing = true;
-        colorPie(e);
+        colourPie(e);
     });
-    document.getElementById("colorPie").addEventListener("mousemove", function myFunction(e)
+    document.addEventListener("mousemove", function myFunction(e)
     {
-        colorPie(e);
+        colourPie(e);
     });
-    document.getElementById("colorPie").addEventListener("mouseup", function myFunction()
+    document.addEventListener("mouseup", function myFunction()
     {
         pressing = false;
     });
@@ -42,28 +46,20 @@ function start()
             rgbChanged();
         });
     }
+    //Hex input field
     document.getElementById(names[3]).addEventListener('change', function myFunction()
     {
-        var holder = document.getElementById(names[3]).value.toUpperCase();
-        document.getElementById(names[3]).value = holder;
-        if(holder.length != 7 || holder[0] != "#")
+        var holder = document.getElementById(names[3]).value.toUpperCase(); //Converts uppercase
+        if(!isHex(holder))
         {
             displayHex();
             return;
-        }
-        var hexSymbols = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'];
-        for(let i = 1; i < 7; i++)
-        {
-            if(!hexSymbols.includes(holder[i]))
-            {
-                displayHex();
-                return;
-            }
         }
         values[3] = holder;
         hexChanged();
     });
 
+    //Hue input fields.
     for(let i = 4; i < 7; i++)
     {
         document.getElementById(names[i]).addEventListener('change', function myFunction()
@@ -92,7 +88,7 @@ function start()
     {
         document.getElementById(names[i] + "Slider").addEventListener("mousemove", function myFunction()
         {
-            if(parseFloat(fourDecimals(document.getElementById(names[i] + "Slider").value)) == fourDecimals(values[i]))
+            if(parseFloat(decimalLimit(document.getElementById(names[i] + "Slider").value,4)) == decimalLimit(values[i],4))
             {
                 return;
             }
@@ -101,36 +97,40 @@ function start()
             hsvChanged();
         });   
     }
-    
+
     if (window.EyeDropper === undefined)
     {
-        console.log("Unsupported!");
+        console.log("Eyedropper unsupported!");
     }
     else
     {
         eyeDropper = new EyeDropper();
-        document.getElementById("eyeDropButton").addEventListener("click", pickColor, false);
+        document.getElementById("eyeDropButton").addEventListener("click", pickColour, false);
     }
-
-    document.getElementById("saveButton").addEventListener('click', saveColor, false);
+    document.getElementById("saveButton").addEventListener('click', saveColour, false);
     document.getElementById("pinButton").addEventListener('click', pin, false);
 
-    displayVisuals();
 
+    // ----- Color Presets ----- //
+
+    setupColourPresetObjects();
     chrome.storage.local.get("key").then((result) => {
-        console.log("saved color key",result.key);
-        if(result.key != undefined)
+        if(result.key != undefined && result.key != null)
         {
-            console.log("Got", result.key);
             values[3] = result.key[0];
-
-            
-            savedColor = result.key.splice(1, result.key.length);
-            setColorPresets();
+            savedColours = result.key.splice(1, result.key.length);
+            setColourPresets();
             hexChanged();
         }
     });
-    setColorPresets();
+    
+    // ----- Pie & selector ----- //
+    document.getElementById("pie").style.width = pieRadius * 2 + "px";
+    document.getElementById("pie").style.height = pieRadius * 2 + "px";
+    document.getElementById("selector").style.width = selectorRadius * 2 + "px";
+    document.getElementById("selector").style.height = selectorRadius * 2 + "px";
+
+    displayVisuals();
 }
 
 // ----- value Change ----- //
@@ -167,9 +167,10 @@ function hsvChanged()
 
 function calculateRGB() //Based on hex
 {
-    values[0] = hexadeciToDecimal(values[3].substring(1,3));
-    values[1] = hexadeciToDecimal(values[3].substring(3,5));
-    values[2] = hexadeciToDecimal(values[3].substring(5,7));
+    for(let i = 0; i < 3; i++)
+    {
+        values[i] = parseInt(values[3].substring(2 * i + 1, 2 * i + 3), 16);
+    }
 }
 
 function calculateHex() //Based on RPG
@@ -204,21 +205,21 @@ function calculateHSV() //Based on RPG
         {
             values[4]++;
         }
-        values[4] = fourDecimals(values[4].toFixed(4)); //Limits to 4 desimals
+        values[4] = decimalLimit(values[4].toFixed(4)); //Limits to 4 desimals
     }
 
     values[5] = 0;
     if(max != 0)
     {
-        values[5] = fourDecimals(((max - min) / max).toFixed(4)); 
+        values[5] = decimalLimit(((max - min) / max).toFixed(4)); 
     }
 
-    values[6] = fourDecimals(max.toFixed(4));
+    values[6] = decimalLimit(max.toFixed(4),4);
 }
 
 function calculateAngleHSV(angle) //Sets RGB based on the angle.
 {
-    angle = (angle + Math.PI * 2) % (Math.PI * 2); //Limits angle to 0 <= angle < 2 * Math.PI
+    angle = (angle + Math.PI * 2) % (Math.PI * 2); //0 <= angle < 2π
     var holder = calculateAngleRGB(angle);
     for(let i = 0; i < 3; i++)
     {
@@ -252,8 +253,8 @@ function displayHSV()
 {
     for(let i = 4; i < 7; i++)
     {
-        document.getElementById(names[i]).value = fourDecimals(values[i]); //Set input field values.
-        document.getElementById(names[i] + "Slider").value = fourDecimals(values[i]); //Set slider values.
+        document.getElementById(names[i]).value = decimalLimit(values[i],4); //Set input field values.
+        document.getElementById(names[i] + "Slider").value = decimalLimit(values[i],4); //Set slider values.
     }
 }
 
@@ -264,22 +265,22 @@ function displayHex(){
 function displayVisuals() //What ever value have been changed, this needs to be called.
 {
     document.getElementById("pie").style.filter = "brightness(" + (values[6] * 100) + "%)";
-    document.getElementById("colorDisplay").style.backgroundColor = values[3];
+    document.getElementById("colourDisplay").style.backgroundColor = values[3];
     
     displaySelector();
-    displaySliderColors();
+    displaySliderColours();
     displaySliderValues();
 }
 
 function displaySelector()
 {
-    var posX = 142 + Math.cos(-values[4] * Math.PI * 2) * 128 * values[5];
-    var posY = 142 + Math.sin(-values[4] * Math.PI * 2) * 128 * values[5];
+    var posX = document.getElementById("pie").getBoundingClientRect().left + pieRadius - selectorRadius + Math.cos(-values[4] * Math.PI * 2) * pieRadius * values[5];
+    var posY = document.getElementById("pie").getBoundingClientRect().top + pieRadius - selectorRadius + Math.sin(-values[4] * Math.PI * 2) * pieRadius * values[5];
     document.getElementById("selector").style.top = posY.toString() + "px";
     document.getElementById("selector").style.left = posX.toString() + "px";
 }
 
-function displaySliderColors()
+function displaySliderColours()
 {
     document.getElementById("redSlider").style.background = "linear-gradient(to right, #00" + values[3].substring(3,7) + ", #FF" + values[3].substring(3,7) + ")";
     document.getElementById("greenSlider").style.background = "linear-gradient(to right, #" + values[3].substring(1,3) + "00" + values[3].substring(5,7) + ", #" + values[3].substring(1,3) + "FF" + values[3].substring(5,7) + ")";
@@ -290,9 +291,9 @@ function displaySliderColors()
     {
         holder[i] = zeroPad(Math.round(holder[i]).toString(16),2);
     }
-    var saturationColor = "#" + holder[0] + holder[1] + holder[2];
-    document.getElementById("saturationSlider").style.background = "linear-gradient(to right, #FFFFFF," + saturationColor + ")";
-    document.getElementById("lightnessSlider").style.background = "linear-gradient(to right, #000000," + saturationColor + ")";
+    var saturationColour = "#" + holder[0] + holder[1] + holder[2];
+    document.getElementById("saturationSlider").style.background = "linear-gradient(to right, #FFFFFF," + saturationColour + ")";
+    document.getElementById("lightnessSlider").style.background = "linear-gradient(to right, #000000," + saturationColour + ")";
 }
 
 function displaySliderValues()
@@ -300,34 +301,31 @@ function displaySliderValues()
     //Slider values
     for(let i = 0; i < 7; i++)
     {
-        if(i == 3)
-        {
-            continue;   
-        }
+        if(i == 3){ continue; } // 3 == hex, not a slider.
         document.getElementById(names[i] + "Slider").value = values[i];
     }
 }
 
-// ----- Color pie ----- //
+// ----- Colour pie ----- //
 
-function colorPie(e)
+function colourPie(e)
 {
     if(!pressing)
     {
         return;
     }
-    var posX = e.clientX - 30;
-    var posY = e.clientY - 94;
-    var dist = Math.sqrt(Math.pow(posX - colorPieRadius,2) + Math.pow(posY - colorPieRadius,2));
+    var posX = e.clientX - document.getElementById("pie").getBoundingClientRect().left;
+    var posY = e.clientY - document.getElementById("pie").getBoundingClientRect().top;
+    var dist = Math.sqrt(Math.pow(posX - pieRadius,2) + Math.pow(posY - pieRadius,2));
     
-    var angle = Math.atan2(posX - colorPieRadius, posY - colorPieRadius) - Math.PI / 2;
+    var angle = Math.atan2(posX - pieRadius, posY - pieRadius) - Math.PI / 2;
     
-    if(dist > colorPieRadius){
-        posX = colorPieRadius + colorPieRadius * Math.cos(angle);
-        posY = colorPieRadius - colorPieRadius * Math.sin(angle);
-        dist = colorPieRadius;
+    if(dist > pieRadius){
+        posX = pieRadius + pieRadius * Math.cos(angle);
+        posY = pieRadius - pieRadius * Math.sin(angle);
+        dist = pieRadius;
     }
-    values[5] = dist / colorPieRadius;
+    values[5] = dist / pieRadius;
     angle = (angle + Math.PI * 2) % (Math.PI * 2); // 0 <= angle < 2 * PI
     calculateAngleHSV(angle);
     calculateHex();
@@ -338,63 +336,63 @@ function colorPie(e)
     displayVisuals();
 }
 
-// ----- Color picker and presets ----- //
+// ----- Colour picker and presets ----- //
 
-function pickColor() {
+function pickColour() {
     if(!pinned)
     {
         document.getElementById("body").style.display = "none";
     }
     setTimeout(async function() //Forces a delay, so popup has time to hide.
     {
-        let pickedColor = await eyeDropper.open();
-        values[3] = pickedColor.sRGBHex.toUpperCase();
+        let pickedColour = await eyeDropper.open();
+        values[3] = pickedColour.sRGBHex.toUpperCase();
         navigator.clipboard.writeText(values[3]);
         hexChanged();
-        displayHex();
         newPresetValue(values[3]);
-        setColorPresets();
+        setColourPresets();
         document.getElementById("body").style.display = "inline-block";
     },1);
 }
 
-function createColorPresets()
+function setupColourPresetObjects()
 {
-    for(var i = 0; i < 20; i++)
+    for(var i = 0; i < savedCoulourUpperLimit; i++)
     {
         var div = document.createElement("div");
-        div.className = "colorPreset";
+        div.className = "colourPreset";
         div.id = i.toString();
-        document.getElementById("savedColors").appendChild(div);
+        document.getElementById("savedColours").appendChild(div);
     }
 }
 
-function removeColorPresets()
+function removeColourPresets()
 {
-    var a = document.getElementById("savedColors");
-    while(a.firstChild != null){
+    var a = document.getElementById("savedColours");
+    while(a.firstChild != null)
+    {
         a.removeChild(a.firstChild);
     }
 }
 
-function setColorPresets()
+function setColourPresets()
 {
-    removeColorPresets();
-    createColorPresets();
-    for(let i = 0; i < 20; i++)
+    //removeColourPresets();
+    //setupColourPresetObjects();
+    for(let i = 0; i < savedCoulourUpperLimit; i++)
     {
-        let colorHolder = "#2B2B2B";
-        if(i < savedColor.length)
+        let colourHolder = "#2B2B2B";
+        if(i < savedColours.length && isHex(savedColours[i]))
         {
-            colorHolder = savedColor[i];
+            colourHolder = savedColours[i];
         }
 
         var div = document.getElementById(i.toString());
-        div.style.backgroundColor = colorHolder;
+        div.style.backgroundColor = colourHolder;
         
-        div.addEventListener("click",function()
-        {
-            values[3] = colorHolder;
+        //div.removeEventListener("click", selectColour);
+        div.addEventListener("click", function(){
+            values[3] = colourHolder;
             hexChanged();
             displayHex();
             navigator.clipboard.writeText(values[3]);
@@ -402,42 +400,34 @@ function setColorPresets()
     }
 }
 
-function newPresetValue(colorValue)
+function newPresetValue(colourValue)
 {
-    savedColor.unshift(colorValue);
-    if(savedColor.length > 20)
+    savedColours.unshift(colourValue);
+    if(savedColours.length > 20)
     {
-        savedColor = savedColor.splice(0,20);
+        savedColours = savedColours.splice(0,20);
     }
     saveToStorage();
 }
 
-function saveColor()
+function saveColour()
 {
     newPresetValue(values[3]);
-    setColorPresets();
+    setColourPresets();
 }
 
-function saveToStorage()
+function saveToStorage() //Saves to the key word of "key" an array containing the currently selected colour and saved coulours.
 {
-    chrome.storage.local.set({ key : [values[3]].concat(savedColor)}, null);
+    chrome.storage.local.set({ key : [values[3]].concat(savedColours)}, null);
 }
 
 function pin()
 {
     pinned = !pinned;
-    document.getElementById("pinButtonImage").src = "images/pin.png";
-    if(!pinned)
-    {
-        document.getElementById("pinButtonImage").src = "images/unpin.png";
-    }
+    document.getElementById("pinButton").src = "images/" + (pinned ? "pin" : "unpin") + ".png";
 }
 
 // ----- Utility functions ----- //
-
-function hexadeciToDecimal(hex) {
-    return parseInt(hex, 16);
-}
 
 function lerp(start,end,value)
 {
@@ -449,10 +439,34 @@ function clamp(min,max,value)
     return Math.min(Math.max(value, min), max);
 }
 
-function fourDecimals(value)
+function decimalLimit(value,limit = 4)
 {
-    const formattedNumber = new Intl.NumberFormat('en', { minimumFractionDigits: 0, maximumFractionDigits: 4 }).format(value);
+    const formattedNumber = new Intl.NumberFormat('en', { minimumFractionDigits: 0, maximumFractionDigits: limit }).format(value);
     return parseFloat(formattedNumber);
+}
+
+function isHex(text)
+{
+    if(typeof(text) !== "string") //Wrong type.
+    {
+        return;
+    }
+    if(text.length != 7) //Wrong length.
+    {
+        return false;
+    }
+    if(text[0] != "#") //No pound sign.
+    {
+        return false;
+    }
+    for(let i = 1; i < text.length; i++) //Checking rest of values.
+    {
+        if(!['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','a','b','c','d','e','f'].includes(text[i]))
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 start();

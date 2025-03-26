@@ -1,10 +1,10 @@
 {
-  "name": "Color Picker",
+  "name": "Colour Picker",
   "description": "Base Level Extension",
   "version": "1.0",
   "manifest_version": 3,
   "action": {
-    "default_popup": "ColorPicker.html",
+    "default_popup": "ColourPicker.html",
     "default_icon": "images/icon32.png"
   },
   "icons": {
