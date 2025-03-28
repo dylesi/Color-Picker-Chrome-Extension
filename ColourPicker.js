@@ -6,7 +6,7 @@ var savedCoulourUpperLimit = 20;
 var pinned = false;
 const zeroPad = (num, places) => String(num).padStart(places, '0');
 let eyeDropper;
-var pieRadius = 128;
+var pieRadius = 90;
 let selectorRadius = 4;
 
 function start()

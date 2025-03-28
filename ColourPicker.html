@@ -6,60 +6,63 @@
   </head>
   <body class="body" id="body">
     <div class="main">
-      <div class="Leftside">
-        <h1>Colour Picker</h1>
-        <div class="pie" id="pie"></div>
-        <div class="savedColours" id="savedColours"></div>
+      <div class="leftside">
+        <div class="topRow">
+          <button><img src="images/eye-dropper-solid.svg" class="pipetteButtonImage" id="eyeDropButton" alt="pipette"></button>
+          <button><img src="images/floppy-disk-solid.svg" class="saveButtonImage" id="saveButton" alt="save"></button>
+          <button><img src="images/unpin.png" class="smallButton" id="pinButton" alt="toggle pin"></button>
+        </div>
+        <div class="leftsidesecond">
+          <div class="savedColours" id="savedColours"></div>
+          <div class="titleAndPie">
+            <h1>Colour Picker</h1>
+            <div class="pie" id="pie"></div>
+          </div>
+        </div>
       </div>
       <div class="selector" id="selector"></div>
       <div class="Rightside">
-        <div class="topRow">
-          <button><img src="images/pipette.png" class="pipetteButtonImage" id="eyeDropButton" alt="pipette"></button>
-          <button><img src="images/save.png" class="saveButtonImage" id="saveButton" alt="save"></button>
-          <div class="empty"></div>
-          <button><img src="images/unpin.png" class="smallButton" id="pinButton" alt="toggle pin"></button>
-        </div>
         <div class="row">
           <p>Red:</p>
           <input type="number" id="red" value="255">
           <input type="range" min="0" max="255" value="255" step="1" class="slider" id="redSlider">
-          <button><img src="images/clipboard.png" class="smallButton" id="copyred" alt="copy red value"></button>
+          <button><img src="images/ctrlc.svg" class="smallButton" id="copyred" alt="copy red value"></button>
         </div>
         <div class="row">
           <p>Green:</p>
           <input type="number" id="green" value="255">
           <input type="range" min="0" max="255" value="255" step="1" class="slider" id="greenSlider">
-          <button><img src="images/clipboard.png" class="smallButton" id="copygreen" alt="copy green value"></button>
+          <button><img src="images/ctrlc.svg" class="smallButton" id="copygreen" alt="copy green value"></button>
         </div>
         <div class="row">
           <p>Blue:</p>
           <input type="number" id="blue" value="255">
           <input type="range" min="0" max="255" value="255" step="1" class="slider" id="blueSlider">
-          <button><img src="images/clipboard.png" class="smallButton" id="copyblue" alt="copy blue value"></button>
+          <button><img src="images/ctrlc.svg" class="smallButton" id="copyblue" alt="copy blue value"></button>
         </div>
         <div class="row">
           <p>Hex:</p>
           <input type="text" id="hex" value="#FFFFFF">
           <div class="colourDisplay" id="colourDisplay"></div>
-          <button><img src="images/clipboard.png" class="smallButton" id="copyhex" alt="copy hex"></button>
+          <button><img src="images/ctrlc.svg" class="smallButton" id="copyhex" alt="copy hex"></button>
         </div>
         <div class="row">
           <p>Hue:</p>
           <input type="number" id="hue" value="0" step="0.002">
           <input type="range" min="0.0" max="1.0" value="0.0" step="0.0002" class="slider" id="hueSlider">
-          <button><img src="images/clipboard.png" class="smallButton" id="copyhue" alt="copy hue value"></button>
+          <button><img src="images/ctrlc.svg" class="smallButton" id="copyhue" alt="copy hue value"></button>
         </div>
         <div class="row">
           <p>Saturation:</p>
           <input type="number" id="saturation" value="0" step="0.002">
           <input type="range" min="0.0" max="1.0" value="0.0" step="0.0002" class="slider" id="saturationSlider">
-          <button><img src="images/clipboard.png" class="smallButton" id="copysaturation" alt="copy saturation value"></button>
+          <button><img src="images/ctrlc.svg" class="smallButton" id="copysaturation" alt="copy saturation value"></button>
         </div>
         <div class="row">
           <p>lightness:</p>
           <input type="number" id="lightness" value="1" step="0.002">
           <input type="range" min="0.0" max="1.0" value="1.0" step="0.0002" class="slider" id="lightnessSlider">
-          <button><img src="images/clipboard.png" class="smallButton" id="copylightness" alt="copy lightness value"></button>
+          <button><img src="images/ctrlc.svg" class="smallButton" id="copylightness" alt="copy lightness value"></button>
         </div>
       </div>
     </div>
