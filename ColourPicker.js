@@ -6,8 +6,9 @@ var savedCoulourUpperLimit = 20;
 var pinned = false;
 const zeroPad = (num, places) => String(num).padStart(places, '0');
 let eyeDropper;
-var pieRadius = 90;
-let selectorRadius = 4;
+
+var pieRadius = document.getElementById("pie").offsetWidth / 2;
+let selectorRadius = document.getElementById("selector").offsetWidth / 2;
 
 function start()
 {
@@ -123,12 +124,7 @@ function start()
             hexChanged();
         }
     });
-    
-    // ----- Pie & selector ----- //
-    document.getElementById("pie").style.width = pieRadius * 2 + "px";
-    document.getElementById("pie").style.height = pieRadius * 2 + "px";
-    document.getElementById("selector").style.width = selectorRadius * 2 + "px";
-    document.getElementById("selector").style.height = selectorRadius * 2 + "px";
+
 
     displayVisuals();
 }
@@ -274,10 +270,18 @@ function displayVisuals() //What ever value have been changed, this needs to be 
 
 function displaySelector()
 {
-    var posX = document.getElementById("pie").getBoundingClientRect().left + pieRadius - selectorRadius + Math.cos(-values[4] * Math.PI * 2) * pieRadius * values[5];
-    var posY = document.getElementById("pie").getBoundingClientRect().top + pieRadius - selectorRadius + Math.sin(-values[4] * Math.PI * 2) * pieRadius * values[5];
+    // var posX = document.getElementById("pie").getBoundingClientRect().left + pieRadius - selectorRadius + Math.cos(-values[4] * Math.PI * 2) * pieRadius * values[5];
+    // var posY = document.getElementById("pie").getBoundingClientRect().top + pieRadius - selectorRadius + Math.sin(-values[4] * Math.PI * 2) * pieRadius * values[5];
+    // document.getElementById("selector").style.top = posY.toString() + "px";
+    // document.getElementById("selector").style.left = posX.toString() + "px";
+
+
+    var posX = document.getElementById("pie").getBoundingClientRect().left - selectorRadius + pieRadius + Math.cos(-values[4] * Math.PI * 2) * pieRadius * values[5];
+    var posY = document.getElementById("pie").getBoundingClientRect().top - selectorRadius +  pieRadius + Math.sin(-values[4] * Math.PI * 2) * pieRadius * values[5];
     document.getElementById("selector").style.top = posY.toString() + "px";
     document.getElementById("selector").style.left = posX.toString() + "px";
+
+
 }
 
 function displaySliderColours()

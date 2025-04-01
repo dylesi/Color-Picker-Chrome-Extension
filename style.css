@@ -1,6 +1,6 @@
 :root{
     --primary-color: #ffffff;
-    --width: 32rem;
+    --width: 36rem;
 }
 
 
@@ -43,7 +43,6 @@ button
 }
 
 .row  {
-    gap: 0.25rem;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -61,16 +60,17 @@ button
 
 .slider{
     width: 6rem;
+    
 }
 #colourDisplay {
     width: 6.3rem;
 }
 
-.pie
+#pie
 {
-    left: 3.5rem;
-    top: 5rem;
-    position:absolute;
+    margin: 1rem;
+    width: 13rem;
+    height: 13rem;
     background-image: radial-gradient(white 1%, rgb(255, 255, 255, 0) 74%),conic-gradient(from 90deg,#FF0000, #FF00FF, #0000FF, #00FFFF, #00FF00, #FFFF00, #FF0000);
     border-radius: 50%;
 }
@@ -85,7 +85,6 @@ button
 
 .leftsidesecond {
     display: flex;
-    align-items: baseline;
 }
 
 .titleAndPie {
@@ -95,10 +94,8 @@ button
     justify-content: center;
 }
 
-.titleAndPie h1  {
-    margin: 0;
-    margin-left: 2.3rem;
-    margin-right: 2rem;
+.topRow h1  {
+    margin: 0 0 0 0.5rem;
     font-size: 1.2rem;
     background: linear-gradient(90deg, rgb(255, 0, 0) 0%, rgb(255, 176, 48) 45%, rgb(114, 255, 86) 90%);
     -webkit-background-clip: text;
@@ -116,16 +113,18 @@ button
     display: flex;
     flex-direction: column;
     align-items: end;
+    justify-content: center;
 }
+
 .selector
 {
+    height: 0.5rem;
+    width: 0.5rem;
+    color: white;
     position: absolute;
-    top: 120px;
-    left: 120px;
     pointer-events:none;
     border-radius: 50%;
     border-style: solid;
-    border-width: 0.5px;
 }
 
 .colourDisplay
@@ -231,10 +230,8 @@ input[type=range]::-webkit-slider-thumb
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    width: 0.5rem;
-    height: 1rem;
-    border: 1px solid rgb(255, 255, 255);
-    border-radius: 25%;
+    width: 0.3rem;
+    height: 1.3rem;
     background-color: #000000;
     cursor: pointer;
 }
